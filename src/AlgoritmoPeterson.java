@@ -1,16 +1,5 @@
-/**
- * Demostracion del ALGORITMO DE PETERSON: una forma clasica de lograr
- * exclusion mutua entre EXACTAMENTE DOS procesos/hilos, sin usar ningun
- * mecanismo del lenguaje (nada de synchronized, Lock ni Semaphore) sino
- * solo dos variables compartidas: "bandera" (quien quiere entrar) y
- * "turno" (a quien le toca ceder el paso si ambos quieren entrar a la vez).
- *
- * Por diseño, Peterson solo funciona para 2 procesos, por eso se muestra
- * como una demostracion independiente y no como parte del productor-consumidor.
- */
 public class AlgoritmoPeterson {
 
-    // volatile asegura que los cambios que hace un hilo se vean de inmediato en el otro
     private static volatile boolean[] bandera = new boolean[2];
     private static volatile int turno;
 
@@ -19,16 +8,15 @@ public class AlgoritmoPeterson {
 
     private static void entrarRegionCritica(int id) {
         int otro = 1 - id;
-        bandera[id] = true;   // "yo quiero entrar"
-        turno = otro;         // "te cedo el turno a ti primero"
-        // Espera activa: mientras el otro tambien quiera entrar Y sea su turno, me quedo aqui
+        bandera[id] = true;
+        turno = otro;
         while (bandera[otro] && turno == otro) {
-            // busy-wait (espera activa) — asi funciona el algoritmo de Peterson originalmente
+            // espera activa
         }
     }
 
     private static void salirRegionCritica(int id) {
-        bandera[id] = false; // "ya termine, ya no quiero entrar"
+        bandera[id] = false;
     }
 
     public static void ejecutar() throws InterruptedException {
@@ -38,14 +26,14 @@ public class AlgoritmoPeterson {
         Runnable tarea0 = () -> {
             for (int i = 0; i < ITERACIONES; i++) {
                 entrarRegionCritica(0);
-                contadorCompartido++; // region critica: solo un hilo a la vez debe estar aqui
+                contadorCompartido++;
                 salirRegionCritica(0);
             }
         };
         Runnable tarea1 = () -> {
             for (int i = 0; i < ITERACIONES; i++) {
                 entrarRegionCritica(1);
-                contadorCompartido++; // region critica: solo un hilo a la vez debe estar aqui
+                contadorCompartido++;
                 salirRegionCritica(1);
             }
         };
@@ -56,7 +44,7 @@ public class AlgoritmoPeterson {
         hiloA.start();
         hiloB.start();
 
-        hiloA.join(); // JOIN: el hilo principal espera a que ambos terminen
+        hiloA.join();
         hiloB.join();
 
         int esperado = ITERACIONES * 2;
