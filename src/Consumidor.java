@@ -1,8 +1,3 @@
-/**
- * Hilo que retira datos del bufer compartido y los "procesa"
- * (en este caso, simplemente los muestra). Igual que Productor,
- * solo conoce la interfaz BuferCompartido.
- */
 public class Consumidor extends Thread {
 
     private final BuferCompartido bufer;
@@ -21,7 +16,7 @@ public class Consumidor extends Thread {
             try {
                 int dato = bufer.consumir();
                 System.out.println("   -> " + nombre + " procesa el dato " + dato);
-                Thread.sleep(70); // simula que procesar algo toma un poco de tiempo
+                Thread.sleep(70);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 System.out.println(nombre + " fue interrumpido.");
