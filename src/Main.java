@@ -1,13 +1,5 @@
 import java.util.Scanner;
 
-/**
- * Clase principal del proyecto de Concurrencia y Sincronizacion.
- * Permite ejecutar el problema Productor-Consumidor con distintos
- * mecanismos de sincronizacion (Monitor, Semaforo o Mutex), ademas de
- * demostraciones independientes de Barreras y del Algoritmo de Peterson.
- *
- * @author Samuel
- */
 public class Main {
 
     private static Scanner sc = new Scanner(System.in);
@@ -49,13 +41,6 @@ public class Main {
         System.out.print("Opcion: ");
     }
 
-    /**
-     * Ejecuta el problema Productor-Consumidor con dos productores y dos
-     * consumidores, usando la implementacion de bufer que se le indique.
-     * Los hilos productores y consumidores son los mismos sin importar
-     * el mecanismo de sincronizacion, porque todos hablan a traves de
-     * la interfaz BuferCompartido.
-     */
     private static void ejecutarProductorConsumidor(BuferCompartido bufer, String etiqueta) throws InterruptedException {
         System.out.println("=== PRODUCTOR-CONSUMIDOR usando " + etiqueta + " ===");
 
@@ -69,7 +54,6 @@ public class Main {
         c1.start();
         c2.start();
 
-        // JOIN: el hilo principal espera a que los cuatro hilos terminen
         p1.join();
         p2.join();
         c1.join();
