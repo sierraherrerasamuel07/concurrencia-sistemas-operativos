@@ -2,14 +2,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
-/**
- * Implementacion del bufer compartido usando SEMAFOROS.
- * Se usan tres semaforos, la forma clasica de resolver este problema:
- *  - espacios: cuenta cuantos lugares libres quedan en el bufer.
- *  - elementos: cuenta cuantos datos hay listos para consumir.
- *  - mutex: semaforo binario (0 o 1) que actua como candado para que
- *    productores y consumidores no toquen la cola al mismo tiempo.
- */
 public class BuferSemaforo implements BuferCompartido {
 
     private final Queue<Integer> cola = new LinkedList<>();
@@ -25,22 +17,22 @@ public class BuferSemaforo implements BuferCompartido {
 
     @Override
     public void producir(int dato) throws InterruptedException {
-        espacios.acquire();   // pide un espacio libre; si no hay, se bloquea aqui
-        mutex.acquire();      // pide el candado para tocar la cola
+        espacios.acquire();
+        mutex.acquire();
         cola.add(dato);
         System.out.println("[Semaforo] Productor inserto " + dato + " (tamaño bufer=" + cola.size() + ")");
-        mutex.release();      // suelta el candado
-        elementos.release();  // avisa que hay un elemento nuevo disponible
+        mutex.release();
+        elementos.release();
     }
 
     @Override
     public int consumir() throws InterruptedException {
-        elementos.acquire();  // pide un elemento disponible; si no hay, se bloquea aqui
-        mutex.acquire();      // pide el candado para tocar la cola
+        elementos.acquire();
+        mutex.acquire();
         int dato = cola.poll();
         System.out.println("[Semaforo] Consumidor retiro " + dato + " (tamaño bufer=" + cola.size() + ")");
-        mutex.release();      // suelta el candado
-        espacios.release();   // avisa que quedo un espacio libre
+        mutex.release();
+        espacios.release();
         return dato;
     }
 }
